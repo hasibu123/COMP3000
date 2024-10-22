@@ -1,1 +1,1 @@
-# COMP3000
+# privacy-preserving geofencing algorithm using Paillier encryption
