@@ -1,1 +1,3 @@
 # privacy-preserving geofencing algorithm using Paillier encryption
+
+Users of location-based services (LBS) and enterprises that use technology are the target audience for this initiative. Traditional methods put data security and privacy at risk because other individuals will be able to determine the precise location information. The product, which provides a privacy-centric solution, is called as the privacy-preserving geofencing algorithm using Paillier encryption. The main key reasons are to ensure privacy, data confidentiality, and compliance with privacy regulations such as GDPR, while still offering the advantages of geofencing services. This is achieved by employing Paillier encryption to perform geofencing checks without disclosing user location data. 
