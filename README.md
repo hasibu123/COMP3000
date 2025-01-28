@@ -6,3 +6,4 @@ To address these challenges, this project utilizes the Paillier cryptosystem, a 
 
 The project details the architecture, encryption protocols, and performance optimization techniques necessary for implementing Paillier encryption in a real-time geofencing environment. Key functionalities include secure location verification, encrypted geofence configuration, and real-time notifications, all while maintaining user data confidentiality. Testing and validation confirm that the system achieves acceptable levels of performance and scalability for practical applications, demonstrating that privacy-preserving geofencing is both feasible and effective. This approach offers a novel solution to the privacy risks associated with location-based services, paving the way for more secure and compliant geofencing technologies in privacy-sensitive industries.
 
+
