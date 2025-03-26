@@ -2,75 +2,12 @@ import unittest
 import math
 from phe import paillier
 from haversine import haversine
-
-def trigonometric_values(lat_A, lon_A, lat_B, lon_B):
-    # Convert degrees to radians
-    latA = math.radians(lat_A)
-    lonA = math.radians(lon_A)
-    latB = math.radians(lat_B)
-    lonB = math.radians(lon_B)
-
-    # Compute the trigonometric values as per the protocol
-    alpha = math.cos(latA / 2)
-    beta = math.sin(latB / 2)
-    gamma = math.sin(latA / 2)
-    delta = math.cos(latB / 2)
-    zeta = math.cos(latA)
-    eta = math.cos(latB)
-    theta = math.sin(lonA / 2)
-    lambda_ = math.cos(lonB / 2)
-    mu = math.cos(lonA / 2)
-    nu = math.sin(lonB / 2)
-
-    return (alpha, beta, gamma, delta, zeta, eta, theta, lambda_, mu, nu)
-
-def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu):
-    alpha_squared = alpha**2
-    neg_two_alpha_gamma = -2 * alpha * gamma
-    gamma_squared = gamma**2
-    zeta_eta_theta_lambda_squared = zeta * eta * (theta**2) * (lambda_**2)
-    neg_two_zeta_eta_theta_lambda = -2 * zeta * eta * theta * lambda_
-    zeta_mu = zeta * mu**2
-
-    enc_alpha_squared = public_key.encrypt(alpha_squared)
-    enc_neg_two_alpha_gamma = public_key.encrypt(neg_two_alpha_gamma)
-    enc_gamma_squared = public_key.encrypt(gamma_squared)
-    enc_zeta_eta_theta_lambda_squared = public_key.encrypt(zeta_eta_theta_lambda_squared)
-    enc_neg_two_zeta_eta_theta_lambda = public_key.encrypt(neg_two_zeta_eta_theta_lambda)
-    enc_zeta_mu = public_key.encrypt(zeta_mu)
-
-    return {
-        "enc_alpha_squared": enc_alpha_squared,
-        "enc_neg_two_alpha_gamma": enc_neg_two_alpha_gamma,
-        "enc_gamma_squared": enc_gamma_squared,
-        "enc_zeta_eta_theta_lambda_squared": enc_zeta_eta_theta_lambda_squared,
-        "enc_neg_two_zeta_eta_theta_lambda": enc_neg_two_zeta_eta_theta_lambda,
-        "enc_zeta_eta": enc_zeta_mu,
-    }
-
-def Server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta):
-    beta_squared = beta**2
-    delta_squared = delta**2
-    mu_nu = mu * nu
-    eta_nu_squared = eta * nu**2
-
-    enc_a = (
-        alice_data["enc_alpha_squared"] * beta_squared
-        + alice_data["enc_neg_two_alpha_gamma"] * (beta * delta)
-        + alice_data["enc_gamma_squared"] * delta_squared
-        + alice_data["enc_zeta_eta_theta_lambda_squared"]
-        + alice_data["enc_neg_two_zeta_eta_theta_lambda"] * mu_nu
-        + alice_data["enc_zeta_eta"] * eta_nu_squared
-    )
-
-    return enc_a
-
-def Bob_compute_distance(enc_a, private_key, geofence_radius):
-    a = private_key.decrypt(enc_a)
-    R = 6371.0  # Earth's radius in kilometers
-    distance = 2 * R * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    return distance <= geofence_radius, distance
+from paillier import (
+    trigonometric_values,
+    alice_encrypt_values,
+    Server_compute_homomorphic_ecnryption,
+    Bob_compute_distance
+)
 
 class TestPaillierGeofence(unittest.TestCase):
     def setUp(self):
@@ -115,7 +52,7 @@ class TestPaillierGeofence(unittest.TestCase):
                 self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
             )
             
-            # Check if all values are encrypted
+            # Check if all values are encrypted(type of encrypted number)
             self.assertIsInstance(alice_data["enc_alpha_squared"], paillier.EncryptedNumber)
             self.assertIsInstance(alice_data["enc_neg_two_alpha_gamma"], paillier.EncryptedNumber)
             self.assertIsInstance(alice_data["enc_gamma_squared"], paillier.EncryptedNumber)
@@ -138,7 +75,7 @@ class TestPaillierGeofence(unittest.TestCase):
                 self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
             )
             
-            enc_a = Server_compute_homomorphic_encryption(
+            enc_a = Server_compute_homomorphic_ecnryption(
                 alice_data, beta, delta, mu, nu, eta
             )
             
@@ -159,11 +96,11 @@ class TestPaillierGeofence(unittest.TestCase):
                 self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
             )
             
-            enc_a = Server_compute_homomorphic_encryption(
+            enc_a = Server_compute_homomorphic_ecnryption(
                 alice_data, beta, delta, mu, nu, eta
             )
             
-            inside, distance = Bob_compute_distance(
+            distance = Bob_compute_distance(
                 enc_a, self.private_key, self.geofence_radius
             )
             
@@ -174,7 +111,7 @@ class TestPaillierGeofence(unittest.TestCase):
             haversine_distance = haversine(
                 (self.lat_A, self.lon_A), (self.lat_B, self.lon_B)
             )
-            self.assertAlmostEqual(distance, haversine_distance, places=2)
+            self.assertAlmostEqual(distance, haversine_distance, places=2) #assertAlmostEqual is used to check if the distance is almost equal to the haversine distance    
             print("test_bob_decryption: PASSED")
         except AssertionError:
             print("test_bob_decryption: FAILED")
@@ -184,20 +121,20 @@ class TestPaillierGeofence(unittest.TestCase):
         """Test if geofence detection is accurate"""
         try:
             # Test point inside geofence
-            inside, distance = Bob_compute_distance(
+            distance = Bob_compute_distance(
                 self._compute_encrypted_distance(50.380000, -4.129000),
                 self.private_key,
                 self.geofence_radius
             )
-            self.assertTrue(inside)
+            self.assertTrue(distance <= self.geofence_radius)
             
             # Test point outside geofence
-            inside, distance = Bob_compute_distance(
+            distance = Bob_compute_distance(
                 self._compute_encrypted_distance(50.390000, -4.140000),
                 self.private_key,
                 self.geofence_radius
             )
-            self.assertFalse(inside)
+            self.assertFalse(distance <= self.geofence_radius)
             print("test_geofence_accuracy: PASSED")
         except AssertionError:
             print("test_geofence_accuracy: FAILED")
@@ -213,7 +150,7 @@ class TestPaillierGeofence(unittest.TestCase):
             self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
         )
         
-        return Server_compute_homomorphic_encryption(
+        return Server_compute_homomorphic_ecnryption(
             alice_data, beta, delta, mu, nu, eta
         )
 
