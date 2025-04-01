@@ -1,5 +1,4 @@
 import unittest
-import math
 from phe import paillier
 from haversine import haversine
 from paillier import (

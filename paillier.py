@@ -88,7 +88,7 @@ def main():
     public_key, private_key = paillier.generate_paillier_keypair()
     lat_A, lon_A = 50.379320, -4.131244  # Alice's coordinates
     lat_B, lon_B = 50.381813, -4.127100  # Bob's coordinates
-    geofence_radius = 0.39  # Radius in kilometers
+    geofence_radius = 0.41  # Radius in kilometers
 
     # Step 1: Convert degrees to radians and compute trigonometric values
     alpha, beta, gamma, delta, zeta, eta, theta, lambda_, mu, nu = trigonometric_values(lat_A, lon_A, lat_B, lon_B)

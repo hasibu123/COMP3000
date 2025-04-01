@@ -4,6 +4,8 @@ from haversine import haversine
 import time
 import statistics
 from paillier import trigonometric_values, alice_encrypt_values, Server_compute_homomorphic_ecnryption, Bob_compute_distance
+import sys
+import io
 
 def run_performance_test(num_iterations=20):
     # Lists to store timing results for each iteration
@@ -16,6 +18,9 @@ def run_performance_test(num_iterations=20):
     }
     
     print(f"Running {num_iterations} iterations of the protocol...\n")
+    
+    # Create a string buffer to capture output
+    output_buffer = io.StringIO()
     
     for i in range(num_iterations):
         iteration_timings = {}
@@ -46,7 +51,11 @@ def run_performance_test(num_iterations=20):
 
         # Step 4: Time Bob's decryption and distance computation
         start_time = time.time()
+        # Redirect stdout to capture output
+        old_stdout = sys.stdout
+        sys.stdout = output_buffer
         distance = Bob_compute_distance(enc_a, private_key, geofence_radius)
+        sys.stdout = old_stdout
         iteration_timings['decryption'] = time.time() - start_time
 
         # Calculate total time for this iteration
