@@ -1,13 +1,11 @@
-import math
 from phe import paillier
-from haversine import haversine
 import time
 import statistics
 from paillier import trigonometric_values, alice_encrypt_values, Server_compute_homomorphic_ecnryption, Bob_compute_distance
 import sys
 import io
 
-def run_performance_test(num_iterations=20):
+def run_performance_test(num_iterations=5):
     # Lists to store timing results for each iteration
     timings_per_iteration = {
         'key_generation': [],
