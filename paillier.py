@@ -49,11 +49,11 @@ def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
         "enc_gamma_squared": enc_gamma_squared,
         "enc_zeta_eta_theta_lambda_squared": enc_zeta_eta_theta_lambda_squared,
         "enc_neg_two_zeta_eta_theta_lambda": enc_neg_two_zeta_eta_theta_lambda,
-        "enc_zeta_eta": enc_zeta_mu,
+        "enc_zeta_mu": enc_zeta_mu,
     }
 
-# Step 3: The server computes alice encrypted values using homomorphic operations and send them to Bob
-def Server_compute_homomorphic_ecnryption(alice_data, beta, delta, mu, nu, eta):
+# Step 3: The server computes alice encrypted values and send them to Bob
+def server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta):
     beta_squared = beta**2
     delta_squared = delta**2
     mu_nu = mu * nu
@@ -65,7 +65,7 @@ def Server_compute_homomorphic_ecnryption(alice_data, beta, delta, mu, nu, eta):
         + alice_data["enc_gamma_squared"] * delta_squared
         + alice_data["enc_zeta_eta_theta_lambda_squared"]
         + alice_data["enc_neg_two_zeta_eta_theta_lambda"] * mu_nu
-        + alice_data["enc_zeta_eta"] * eta_nu_squared
+        + alice_data["enc_zeta_mu"] * eta_nu_squared
     )
 
     return enc_a
@@ -88,7 +88,7 @@ def main():
     public_key, private_key = paillier.generate_paillier_keypair()
     lat_A, lon_A = 50.379320, -4.131244  # Alice's coordinates
     lat_B, lon_B = 50.381813, -4.127100  # Bob's coordinates
-    geofence_radius = 0.41  # Radius in kilometers
+    geofence_radius = 0.39  # Radius in kilometers
 
     # Step 1: Convert degrees to radians and compute trigonometric values
     alpha, beta, gamma, delta, zeta, eta, theta, lambda_, mu, nu = trigonometric_values(lat_A, lon_A, lat_B, lon_B)
@@ -97,7 +97,7 @@ def main():
     alice_data = alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu)
 
     # Step 3: The server computes alice encrypted values using homomorphic operations
-    enc_a = Server_compute_homomorphic_ecnryption(alice_data, beta, delta, mu, nu, eta)
+    enc_a = server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta)
 
     # Step 4: Bob decrypts enc_a and computes the distance
     distance = Bob_compute_distance(enc_a, private_key, geofence_radius)

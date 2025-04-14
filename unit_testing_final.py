@@ -1,12 +1,7 @@
 import unittest
 from phe import paillier
 from haversine import haversine
-from paillier import (
-    trigonometric_values,
-    alice_encrypt_values,
-    Server_compute_homomorphic_ecnryption,
-    Bob_compute_distance
-)
+from paillier import (trigonometric_values, alice_encrypt_values, server_compute_homomorphic_encryption, Bob_compute_distance)
 
 class TestPaillierGeofence(unittest.TestCase):
     def setUp(self):
@@ -74,7 +69,7 @@ class TestPaillierGeofence(unittest.TestCase):
                 self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
             )
             
-            enc_a = Server_compute_homomorphic_ecnryption(
+            enc_a = server_compute_homomorphic_encryption(
                 alice_data, beta, delta, mu, nu, eta
             )
             
@@ -95,7 +90,7 @@ class TestPaillierGeofence(unittest.TestCase):
                 self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
             )
             
-            enc_a = Server_compute_homomorphic_ecnryption(
+            enc_a = server_compute_homomorphic_encryption(
                 alice_data, beta, delta, mu, nu, eta
             )
             
@@ -149,7 +144,7 @@ class TestPaillierGeofence(unittest.TestCase):
             self.public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
         )
         
-        return Server_compute_homomorphic_ecnryption(
+        return server_compute_homomorphic_encryption(
             alice_data, beta, delta, mu, nu, eta
         )
 

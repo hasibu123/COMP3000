@@ -1,7 +1,7 @@
 from phe import paillier
 import time
 import statistics
-from paillier import trigonometric_values, alice_encrypt_values, Server_compute_homomorphic_ecnryption, Bob_compute_distance
+from paillier import trigonometric_values, alice_encrypt_values, server_compute_homomorphic_encryption, Bob_compute_distance
 import sys
 import io
 
@@ -44,7 +44,7 @@ def run_performance_test(num_iterations=5):
 
         # Step 3: Time server computation
         start_time = time.time()
-        enc_a = Server_compute_homomorphic_ecnryption(alice_data, beta, delta, mu, nu, eta)
+        enc_a = server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta)
         iteration_timings['server_computation'] = time.time() - start_time
 
         # Step 4: Time Bob's decryption and distance computation
