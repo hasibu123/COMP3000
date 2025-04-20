@@ -5,7 +5,7 @@ from paillier import trigonometric_values, alice_encrypt_values, server_compute_
 import sys
 import io
 
-def run_performance_test(num_iterations=5):
+def run_performance_test(num_iterations=30):
     # Lists to store timing results for each iteration
     timings_per_iteration = {
         'key_generation': [],
