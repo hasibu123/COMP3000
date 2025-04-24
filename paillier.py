@@ -31,7 +31,7 @@ def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
     neg_two_alpha_gamma = -2 * alpha * gamma
     gamma_squared = gamma**2
     zeta_eta_theta_lambda_squared = zeta * eta * (theta**2) * (lambda_**2)
-    neg_two_zeta_eta_theta_lambda = -2 * zeta * eta * theta * lambda_
+    neg_two_zeta_eta_theta_lambda = -2 * zeta * mu * theta * lambda_
     zeta_mu = zeta * mu**2
 
     # Encrypt the values
@@ -53,10 +53,10 @@ def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
     }
 
 # Step 3: The server computes alice encrypted values and send them to Bob
-def server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta):
+def server_compute_homomorphic_encryption(alice_data, beta, delta, nu, eta):
     beta_squared = beta**2
     delta_squared = delta**2
-    mu_nu = mu * nu
+    eta_nu = eta * nu
     eta_nu_squared = eta * nu**2
 
     enc_a = (
@@ -64,7 +64,7 @@ def server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta):
         + alice_data["enc_neg_two_alpha_gamma"] * (beta * delta)
         + alice_data["enc_gamma_squared"] * delta_squared
         + alice_data["enc_zeta_eta_theta_lambda_squared"]
-        + alice_data["enc_neg_two_zeta_eta_theta_lambda"] * mu_nu
+        + alice_data["enc_neg_two_zeta_eta_theta_lambda"] * eta_nu
         + alice_data["enc_zeta_mu"] * eta_nu_squared
     )
 
