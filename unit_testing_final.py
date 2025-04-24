@@ -51,7 +51,7 @@ class TestPaillierGeofence(unittest.TestCase):
             self.assertIsInstance(alice_data["enc_neg_two_alpha_gamma"], paillier.EncryptedNumber)
             self.assertIsInstance(alice_data["enc_gamma_squared"], paillier.EncryptedNumber)
             self.assertIsInstance(alice_data["enc_zeta_eta_theta_lambda_squared"], paillier.EncryptedNumber)
-            self.assertIsInstance(alice_data["enc_neg_two_zeta_eta_theta_lambda"], paillier.EncryptedNumber)
+            self.assertIsInstance(alice_data["enc_neg_two_zeta_mu_theta_lambda"], paillier.EncryptedNumber)
             self.assertIsInstance(alice_data["enc_zeta_eta"], paillier.EncryptedNumber)
             print("test_alice_encryption: PASSED")
         except AssertionError:
