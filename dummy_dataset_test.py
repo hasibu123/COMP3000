@@ -30,7 +30,7 @@ def is_within_geofence(center_lat, center_lon, geofence_radius, data_latitude, d
     alice_data = alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu)
 
     # Server computes homomorphic encryption
-    enc_a = server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta)
+    enc_a = server_compute_homomorphic_encryption(alice_data, beta, delta, nu, eta)
 
     # Suppress output from Bob_compute_distance
     old_stdout = sys.stdout

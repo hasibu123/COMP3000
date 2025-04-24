@@ -70,7 +70,7 @@ class TestPaillierGeofence(unittest.TestCase):
             )
             
             enc_a = server_compute_homomorphic_encryption(
-                alice_data, beta, delta, mu, nu, eta
+                alice_data, beta, delta, nu, eta
             )
             
             self.assertIsInstance(enc_a, paillier.EncryptedNumber)
@@ -91,7 +91,7 @@ class TestPaillierGeofence(unittest.TestCase):
             )
             
             enc_a = server_compute_homomorphic_encryption(
-                alice_data, beta, delta, mu, nu, eta
+                alice_data, beta, delta, nu, eta
             )
             
             distance = Bob_compute_distance(
@@ -145,7 +145,7 @@ class TestPaillierGeofence(unittest.TestCase):
         )
         
         return server_compute_homomorphic_encryption(
-            alice_data, beta, delta, mu, nu, eta
+            alice_data, beta, delta, nu, eta
         )
 
 if __name__ == '__main__':

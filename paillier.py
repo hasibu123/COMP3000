@@ -31,7 +31,7 @@ def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
     neg_two_alpha_gamma = -2 * alpha * gamma
     gamma_squared = gamma**2
     zeta_eta_theta_lambda_squared = zeta * eta * (theta**2) * (lambda_**2)
-    neg_two_zeta_eta_theta_lambda = -2 * zeta * mu * theta * lambda_
+    neg_two_zeta_mu_theta_lambda = -2 * zeta * mu * theta * lambda_
     zeta_mu = zeta * mu**2
 
     # Encrypt the values
@@ -39,7 +39,7 @@ def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
     enc_neg_two_alpha_gamma = public_key.encrypt(neg_two_alpha_gamma)
     enc_gamma_squared = public_key.encrypt(gamma_squared)
     enc_zeta_eta_theta_lambda_squared = public_key.encrypt(zeta_eta_theta_lambda_squared)
-    enc_neg_two_zeta_eta_theta_lambda = public_key.encrypt(neg_two_zeta_eta_theta_lambda)
+    enc_neg_two_zeta_mu_theta_lambda = public_key.encrypt(neg_two_zeta_mu_theta_lambda)
     enc_zeta_mu = public_key.encrypt(zeta_mu)
 
 # Alice sends encrypted values to the server
@@ -48,7 +48,7 @@ def alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu
         "enc_neg_two_alpha_gamma": enc_neg_two_alpha_gamma,
         "enc_gamma_squared": enc_gamma_squared,
         "enc_zeta_eta_theta_lambda_squared": enc_zeta_eta_theta_lambda_squared,
-        "enc_neg_two_zeta_eta_theta_lambda": enc_neg_two_zeta_eta_theta_lambda,
+        "enc_neg_two_zeta_mu_theta_lambda": enc_neg_two_zeta_mu_theta_lambda,
         "enc_zeta_mu": enc_zeta_mu,
     }
 
@@ -64,7 +64,7 @@ def server_compute_homomorphic_encryption(alice_data, beta, delta, nu, eta):
         + alice_data["enc_neg_two_alpha_gamma"] * (beta * delta)
         + alice_data["enc_gamma_squared"] * delta_squared
         + alice_data["enc_zeta_eta_theta_lambda_squared"]
-        + alice_data["enc_neg_two_zeta_eta_theta_lambda"] * eta_nu
+        + alice_data["enc_neg_two_zeta_mu_theta_lambda"] * eta_nu
         + alice_data["enc_zeta_mu"] * eta_nu_squared
     )
 
@@ -97,7 +97,7 @@ def main():
     alice_data = alice_encrypt_values(public_key, alpha, gamma, zeta, eta, theta, lambda_, mu)
 
     # Step 3: The server computes alice encrypted values using homomorphic operations
-    enc_a = server_compute_homomorphic_encryption(alice_data, beta, delta, mu, nu, eta)
+    enc_a = server_compute_homomorphic_encryption(alice_data, beta, delta, nu, eta)
 
     # Step 4: Bob decrypts enc_a and computes the distance
     distance = Bob_compute_distance(enc_a, private_key, geofence_radius)
