@@ -1,4 +1,5 @@
 import math
+import time
 from phe import paillier
 from haversine import haversine
 
@@ -67,14 +68,13 @@ def server_compute_homomorphic_encryption(alice_data, beta, delta, nu, eta):
         + alice_data["enc_neg_two_zeta_mu_theta_lambda"] * eta_nu
         + alice_data["enc_zeta_mu"] * eta_nu_squared
     )
-
     return enc_a
 
 # Step 4: Bob decrypts enc_a with Alice private key and computes the distance
 def Bob_compute_distance(enc_a,private_key, geofence_radius):
-    a = private_key.decrypt(enc_a)
+    dec_a = private_key.decrypt(enc_a)
     R = 6371.0 # Earth's radius in kilometers
-    distance = 2 * R * math.atan2(math.sqrt(a), math.sqrt(1 - a)) # Compute haversine distance
+    distance = 2 * R * math.atan2(math.sqrt(dec_a), math.sqrt(1 - dec_a)) # Compute haversine distance
 
     # Determine if Alice's point is inside or outside Bob geofence
     if distance <= geofence_radius:
@@ -85,10 +85,11 @@ def Bob_compute_distance(enc_a,private_key, geofence_radius):
     return distance
 
 def main():
+    start_time = time.time()
     public_key, private_key = paillier.generate_paillier_keypair()
-    lat_A, lon_A = 50.379320, -4.131244  # Alice's coordinates
+    lat_A, lon_A = 50.379320, -4.131244 # Alice's coordinates
     lat_B, lon_B = 50.381813, -4.127100  # Bob's coordinates
-    geofence_radius = 0.39  # Radius in kilometers
+    geofence_radius = 0.39 # Radius in kilometers
 
     # Step 1: Convert degrees to radians and compute trigonometric values
     alpha, beta, gamma, delta, zeta, eta, theta, lambda_, mu, nu = trigonometric_values(lat_A, lon_A, lat_B, lon_B)
@@ -104,7 +105,11 @@ def main():
 
     # Validate using standard haversine library to prove validaty
     haversine_distance = haversine((lat_A, lon_A), (lat_B, lon_B))
+    end_time = time.time()
+    print(f"Alice coordinates: ({lat_A}, {lon_A})") 
+    print(f"Bob coordinates: ({lat_B}, {lon_B})")
+    print(f"Bob's geofence radius: {geofence_radius} km")
     print(f"Distance between Alice and Bob (using haversine library): {haversine_distance:.2f} km")
-
+    print(f"Total time taken: {end_time - start_time:.4f} seconds")
 if __name__ == "__main__":
     main()
